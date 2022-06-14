@@ -6,6 +6,6 @@
 when not defined(release):
   import segfaults # converts segfaults into NilAccessError
 
-import player
-import mob
-import main
+import player, mob, main
+
+export player, mob, main

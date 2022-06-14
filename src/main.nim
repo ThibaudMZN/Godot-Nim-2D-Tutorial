@@ -1,44 +1,47 @@
 import godot
-import godotapi / [global_constants, input_event, position_2d, animated_sprite, viewport, animation, sprite_frames, timer, packed_scene, path_follow_2d, node]
-import player
-import std/random
-import std/math
+import godotapi / [global_constants, input_event, position_2d, animated_sprite,
+    viewport, animation, sprite_frames, timer, packed_scene, path_follow_2d, node]
+
+import player, utils
+import std/[random, math]
+
+defineGetter Timer
+defineGetter Position2d
+defineGetter PathFollow2D
 
 gdobj Main of Node:
   var score: int
-  var mob_scene {.gdExport.} : PackedScene
+  var mob_scene {.gdExport.}: PackedScene
   var player: Player
 
-  method init*() =
-    self.player = self.getNode("Player") as Player
-
   method ready*() =
-    discard self.connect("hit", self.player, "gameOver")
+    self.player = getPlayer("Player")
+    discard self.player.connect("hit", self, "gameOver")
     self.newGame()
 
   proc gameOver*() {.gdExport.} =
-    stop self.getNode("ScoreTimer") as Timer
-    stop self.getNode("MobTimer") as Timer
+    stop getTimer("ScoreTimer")
+    stop getTimer("MobTimer")
 
   proc newGame*() {.gdExport.} =
     self.score = 0
-    # self.player.start(self.getNode("StartPosition") as Position2D)
-    start self.getNode("StartTimer") as Timer
+    self.player.start(getPosition2d("StartPosition").position)
+    start getTimer("StartTimer")
 
   method onStartTimeout*() {.base.} =
     print("Start Timer")
-    start self.getNode("ScoreTimer") as Timer
-    start self.getNode("MobTimer") as Timer
+    start getTimer("ScoreTimer")
+    start getTimer("MobTimer")
 
   method onScoreTimeout*() {.base.} =
-    print("Score Timer")
+    print("Score Timer: ", self.score)
     self.score += 1
 
   method onMobTimeout*() {.base.} =
     print("Mob Timer")
     var mob = self.mob_scene.instance()
 
-    var mob_spawn_location = self.getNode("MobPath/MobSpawnLocation") as PathFollow2D
+    var mob_spawn_location = getPathFollow2D("MobPath/MobSpawnLocation")
     mob_spawn_location.offset = rand(1.0)
     var direction = mob_spawn_location.rotation + PI / 2
 

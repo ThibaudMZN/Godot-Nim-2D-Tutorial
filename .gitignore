@@ -9,3 +9,7 @@ nimcache
 *.import
 *.pdb
 *.exe
+
+.vscode/
+*.dylib
+*.dylib.*

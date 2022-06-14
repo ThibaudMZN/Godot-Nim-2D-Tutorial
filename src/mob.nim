@@ -2,6 +2,8 @@ import godot
 import godotapi / [global_constants, input_event, position_2d, animated_sprite, viewport, animation, sprite_frames]
 import std/random
 
+import utils
+
 gdobj Mob of RigidBody2D:
   var animated_sprite: AnimatedSprite
 
@@ -13,3 +15,5 @@ gdobj Mob of RigidBody2D:
 
   proc onVisibilityNotifier2DScreenExited*() {.gdExport.} =
     self.queueFree()
+
+defineGetter Mob
