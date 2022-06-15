@@ -11,9 +11,9 @@ gdobj Mob of RigidBody2D:
     self.animated_sprite = self.getNode("AnimatedSprite") as AnimatedSprite
     self.animated_sprite.playing = true
     var mob_types = self.animated_sprite.frames.getAnimationNames()
-    self.animated_sprite.animation = mob_types[rand(mob_types.len)]
+    self.animated_sprite.animation = mob_types[rand(mob_types.len - 1)]
 
-  proc onVisibilityNotifier2DScreenExited*() {.gdExport.} =
+  method onScreenExited*() {.base.} =
     self.queueFree()
 
 defineGetter Mob

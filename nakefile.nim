@@ -51,3 +51,13 @@ task "clean", "Remove files produced by build":
   removeDir("_dlls")
   removeFile("nakefile")
   removeFile("nakefile.exe")
+
+task "run", "Run project on default scene":
+  let godotBin = getEnv("GODOT_BIN")
+  if godotBin.len == 0:
+    echo "GODOT_BIN environment variable is not set"
+    quit(-1)
+  if not fileExists(godotBin):
+    echo "Invalid GODOT_BIN path: " & godotBin
+    quit(-1)
+  direShell(godotBin, "-d")
