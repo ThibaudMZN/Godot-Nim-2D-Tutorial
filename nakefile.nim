@@ -4,7 +4,7 @@ import nake
 import os, ospaths, times
 import godotapigen
 
-proc genGodotApi() =
+proc verifyGodotBin(): string =
   let godotBin = getEnv("GODOT_BIN")
   if godotBin.len == 0:
     echo "GODOT_BIN environment variable is not set"
@@ -12,7 +12,10 @@ proc genGodotApi() =
   if not fileExists(godotBin):
     echo "Invalid GODOT_BIN path: " & godotBin
     quit(-1)
+  return godotBin
 
+proc genGodotApi() =
+  let godotBin = verifyGodotBin()
   const targetDir = "src"/"godotapi"
   createDir(targetDir)
   const jsonFile = targetDir/"api.json"
@@ -53,11 +56,5 @@ task "clean", "Remove files produced by build":
   removeFile("nakefile.exe")
 
 task "run", "Run project on default scene":
-  let godotBin = getEnv("GODOT_BIN")
-  if godotBin.len == 0:
-    echo "GODOT_BIN environment variable is not set"
-    quit(-1)
-  if not fileExists(godotBin):
-    echo "Invalid GODOT_BIN path: " & godotBin
-    quit(-1)
+  let godotBin = verifyGodotBin()
   direShell(godotBin, "-d")
