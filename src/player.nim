@@ -44,7 +44,7 @@ gdobj Player of Area2D:
     else:
       stop self.animated_sprite
 
-  method onBodyEntered*(body: KinematicBody) {.base.} =
+  method onBodyEntered*(body: RigidBody2D) {.base.} =
     self.hide()
     self.emitSignal("hit")
     self.collisionShape.setDeferred("disabled", toVariant(true))

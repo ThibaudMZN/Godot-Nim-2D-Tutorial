@@ -15,7 +15,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Godot-Nim Stub"
+config/name="Godot-Nim 2D Tutorial"
 run/main_scene="res://main.tscn"
 config/icon="res://icon.png"
 

@@ -1,8 +1,8 @@
 import godot
 import godotapi / [global_constants, input_event, position_2d, animated_sprite,
-    viewport, animation, sprite_frames, timer, packed_scene, path_follow_2d, node, rigid_body_2d]
+    viewport, animation, sprite_frames, timer, packed_scene, path_follow_2d, node, rigid_body_2d, scene_tree]
 
-import player, mob, utils
+import player, mob, hud, utils
 import std/[random, math]
 
 defineGetter Timer
@@ -13,19 +13,24 @@ gdobj Main of Node:
   var score: int
   var mob_scene {.gdExport.}: PackedScene
   var player: Player
+  var hud: Hud
 
   method ready*() =
     self.player = getPlayer("Player")
+    self.hud = getHud("HUD")
     discard self.player.connect("hit", self, "_on_game_over")
-    self.newGame()
+    discard self.hud.connect("start_game", self, "_on_new_game")
 
   method onGameOver*() {.base.} =
+    self.hud.showGameOver()
     stop getTimer("ScoreTimer")
     stop getTimer("MobTimer")
 
-  proc newGame*() {.gdExport.} =
+  method onNewGame*() {.base.} =
+    discard self.getTree().callGroup("mobs", "queue_free")
     self.score = 0
     self.player.start(getPosition2d("StartPosition").position)
+    self.hud.updateScore(self.score)
     start getTimer("StartTimer")
 
   method onStartTimeout*() {.base.} =
@@ -34,6 +39,7 @@ gdobj Main of Node:
 
   method onScoreTimeout*() {.base.} =
     self.score += 1
+    self.hud.updateScore(self.score)
 
   method onMobTimeout*() {.base.} =
     var mob = self.mob_scene.instance() as Mob
