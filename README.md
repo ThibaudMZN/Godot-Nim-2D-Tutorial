@@ -9,3 +9,5 @@ Prerequisites:
 4. Install godot-nim: `nimble install godot`
 
 Run `nake build` in any directory within the project to compile for the current platform.
+
+Run `nake run` to run the compiled project.

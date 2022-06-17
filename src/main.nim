@@ -1,6 +1,6 @@
 import godot
 import godotapi / [global_constants, input_event, position_2d, animated_sprite,
-    viewport, animation, sprite_frames, timer, packed_scene, path_follow_2d, node, rigid_body_2d, scene_tree]
+    viewport, animation, sprite_frames, timer, packed_scene, path_follow_2d, node, rigid_body_2d, scene_tree, audio_stream_player]
 
 import player, mob, hud, utils
 import std/[random, math]
@@ -8,6 +8,7 @@ import std/[random, math]
 defineGetter Timer
 defineGetter Position2d
 defineGetter PathFollow2D
+defineGetter AudioStreamPlayer
 
 gdobj Main of Node:
   var score: int
@@ -22,11 +23,14 @@ gdobj Main of Node:
     discard self.hud.connect("start_game", self, "_on_new_game")
 
   method onGameOver*() {.base.} =
+    getAudioStreamPlayer("Music").stop()
+    getAudioStreamPlayer("DeathSound").play()
     self.hud.showGameOver()
     stop getTimer("ScoreTimer")
     stop getTimer("MobTimer")
 
   method onNewGame*() {.base.} =
+    getAudioStreamPlayer("Music").play()
     discard self.getTree().callGroup("mobs", "queue_free")
     self.score = 0
     self.player.start(getPosition2d("StartPosition").position)
