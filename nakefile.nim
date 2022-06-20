@@ -58,3 +58,7 @@ task "clean", "Remove files produced by build":
 task "run", "Run project on default scene":
   let godotBin = verifyGodotBin()
   direShell(godotBin, "-d")
+
+task "editor", "Open Godot's editor":
+  let godotBin = verifyGodotBin()
+  direShell(godotBin, "-e")

@@ -11,3 +11,5 @@ Prerequisites:
 Run `nake build` in any directory within the project to compile for the current platform.
 
 Run `nake run` to run the compiled project.
+
+Run `nake editor` to open godot's editor.
